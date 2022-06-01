@@ -1,8 +1,8 @@
 # FEDRER - Feedback vertex set using Edge Density and REmove Redundant
 
-This repository contains a heuristic solution to the Directed Feedback Vertex Set problem.
+This repository contains a **heuristic solution** to the Directed Feedback Vertex Set problem.
 
-The program is submitted to the [PACE Challenge 2022](https://pacechallenge.org/2022/).
+The program is submitted to the [PACE Challenge 2022](https://pacechallenge.org/2022/) in the **heuristic track**.
 
 The **Directed Feedback Vertex Set** problem is defined as follows:
 
