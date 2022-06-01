@@ -22,7 +22,7 @@ Thus, a feedback vertex set of a graph is a set of vertices whose deletion leave
 
 1. Clone the repository:
 
-    `git clone git@github.com:Amanj2000/PACE-2022-MFVS.git`
+    `git clone git@github.com:Amanj2000/PACE-2022-Directed-Feedback-Vertex-Set.git`
 
 2. Run cmake: `cmake .`
 3. Run make: `make -j 8`
