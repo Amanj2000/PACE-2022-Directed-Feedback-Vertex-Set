@@ -4,7 +4,7 @@ This repository contains a heuristic solution to the Directed Feedback Vertex Se
 
 The program is submitted to the [PACE Challenge 2022](https://pacechallenge.org/2022/).
 
-The **Directed Feedback Vertex Set** Problem is defined as follows:
+The **Directed Feedback Vertex Set** problem is defined as follows:
 
 **Input**: A directed graph $G = (V, E)$
 
