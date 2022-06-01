@@ -25,7 +25,7 @@ Thus, a feedback vertex set of a graph is a set of vertices whose deletion leave
     `git clone git@github.com:Amanj2000/PACE-2022-MFVS.git`
 
 2. Run cmake: `cmake .`
-3. Run make: `make`
+3. Run make: `make -j 8`
 4. A static code binary named `fedrer` will now be available in the root directory
 
 ## Run Application
