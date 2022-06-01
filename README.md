@@ -41,7 +41,7 @@ By default, the solver runs till it receives a `SIGTERM`.
 
 ## Submit
 
-Prepare CMake submission for optil.io with
+Prepare CMake submission for optil.io with:
 
     tar -czvf fedrer.tgz fedrer.cpp CMakeLists.txt
 
