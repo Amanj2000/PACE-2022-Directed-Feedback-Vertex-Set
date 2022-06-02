@@ -8,23 +8,17 @@
 #include <unordered_set>
 #include <unordered_map>
 #include <algorithm>
-#include <time.h>
 #include <signal.h>
 #include <unistd.h>
 
 using namespace std;
 
-enum heuristic { Pagerank, Edge_Density };
 volatile sig_atomic_t tle = 0;
 long long gl_curr, gl_mod_val;
 
 /// SIGTERM handler
 void term(int signum) {
 	tle = 1;
-}
-
-void alarm_handler(int signum) {
-	raise(SIGTERM);
 }
 
 class Graph {
@@ -453,30 +447,6 @@ public:
 		return G;
 	}
 
-	// No need to check if the graph is DAG or NOT since every graph we are processing is a SCC.
-	//  bool isDAG() {
-
-	//     unordered_map<int, bool> vis, marked;
-
-	//     function<bool(int)> dfs;
-	//     dfs = [&](int node) {
-	//              vis[node] = true;
-	//              marked[node] = true;
-	//              for(const int& ch: graph[node]) {
-	//                  if(marked[ch] || (!vis[ch] && dfs(ch)))
-	//                      return true;
-	//              }
-	//              marked[node] = false;
-	//              return false;
-	//          };
-
-	//      for(auto& p: graph) {
-	//          if(!vis[p.first] && dfs(p.first))
-	//              return false;
-	//      }
-	//      return true;
-	//  }
-
 	/// Helps in calculating SCC of a graph
 	void fill(int start, unordered_map<int, bool>& vis, stack<int>& st) {
 		stack<int> q;
@@ -585,22 +555,14 @@ public:
 	}
 
    void get_FVS_Heuristic(vector<int>& fvs, int freq) {
-		
-		heuristic method;
-		method = Edge_Density;
 
 		int count = max(1, n/freq); // no. of critical nodes to remove from graph
-		vector<int> cnodes = get_critical_nodes(method, count);
+		vector<int> cnodes = edge_density(count);
 		remove_nodes(cnodes);
 
 		for(int nd: cnodes)
 		fvs.push_back(nd);
-	}
-
-	vector<int> get_critical_nodes(heuristic method=Edge_Density, int count=1) {
-		
-		return edge_density(count);
-	}               
+	}         
 
 	/**
 	 * @param count no. of critical nodes to return
@@ -828,8 +790,6 @@ vector<int> type_1(Graph* G, int orig_edges) {
 	gl_curr = 123459876;
 	gl_mod_val = 2147483648;
 	
-	// cerr << "G->n: " << G->n << "\tInitial FVS: " << curr_fvs.size() << "\n";
-	// cerr << "freq : "  << freq << "\tmax_iter: " << max_iter << "\n";
 	int old_sz = curr_fvs.size();
 	while(start_add && !tle)
 	{
@@ -839,7 +799,6 @@ vector<int> type_1(Graph* G, int orig_edges) {
 		{
 			int curr_sz = curr_fvs.size();
 			int num_nodes_add = max({1, min(graph_nodes_sz - curr_sz, curr_sz)/start_add});
-			// num_nodes_add = min(num_nodes_add, (int)curr_fvs.size());
 
 			unordered_set<int> new_fvs(curr_fvs.begin(), curr_fvs.end());
 
@@ -857,14 +816,11 @@ vector<int> type_1(Graph* G, int orig_edges) {
 			curr_fvs = remove_redundant(DG, curr_fvs, freq);
 			delete(DG);
 
-			// cerr << "adding nodes: " << num_nodes_add << "\tFVS size: " << curr_fvs.size() + mfvs.size() << "\tBest: " << best_add_size + mfvs.size() << "\tstart_add: " << start_add << endl;
-
 			if((curr_fvs.size() < best_add_size) && !tle) {
 				best_add_size = curr_fvs.size();
 				best_add = curr_fvs;
 			}
 		}
-		// cerr << "BEST FVS: " << best_add_size + mfvs.size() << " " << start_add << endl;
 
 		start_add++;
 		if(start_add > 10) start_add = 2;
@@ -921,8 +877,6 @@ vector<int> improve_fvs(Graph* G, int orig_edges) {
 
 	int cnt = 0;
 
-	// cerr << "Initial FVS: " << curr_fvs.size() << "\n";
-
 	while(start_add && !tle) {
 		int cnt_iter = 0;
 
@@ -953,8 +907,6 @@ vector<int> improve_fvs(Graph* G, int orig_edges) {
 			curr_fvs = remove_redundant(DG, curr_fvs, freq);
 			delete(DG);
 
-			// cerr << "adding nodes: " << num_nodes_add << "\tFVS size: " << curr_fvs.size() << "\n";
-
 			bool iter_flag = 0;
 
 			if((curr_fvs.size() < best_add_size) && !tle) {
@@ -971,10 +923,8 @@ vector<int> improve_fvs(Graph* G, int orig_edges) {
 				cnt_iter = 0;
 			}
 		}
-		// cerr << "BEST FVS: " << best_add_size << " " << start_add << "\n";
 		
 		cnt++;
-
 		if(cnt == cnt_ub) {
 			start_add = actual_start;
 			cnt = 0;
@@ -997,12 +947,6 @@ int main() {
 	action.sa_handler = term;
 	sigaction(SIGTERM, &action, NULL);
 
-	// struct sigaction alarm_action;
-	// memset(&alarm_action, 0, sizeof(struct sigaction));
-	// alarm_action.sa_handler = alarm_handler;
-	// sigaction(SIGALRM, &alarm_action, NULL);
-	// alarm(600);
-
 	int m;
 	Graph* G = read_graph(m);
 	vector<int> mfvs;
@@ -1019,7 +963,5 @@ int main() {
 	for(const int& x: mfvs)
 		cout << x << "\n";
 	
-	// cerr << "Ans: " << best_fvs.size() + mfvs.size() << endl;
-	// cout << best_fvs.size() + mfvs.size() << endl;
 	return 0;
 }
